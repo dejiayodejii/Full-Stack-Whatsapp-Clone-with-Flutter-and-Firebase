@@ -1,16 +1,50 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsapp_clone_/common/utils/colors.dart';
+import 'package:whatsapp_clone_/common/utils/utils.dart';
+import 'package:whatsapp_clone_/features/auth/controller/auth_provider.dart';
+import 'package:whatsapp_clone_/features/chats/widgets/recent_chat.dart';
+import 'package:whatsapp_clone_/features/select_contact/views/select_contact_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
+  
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   late TabController tabBarController;
+  @override
+  void initState() {
+    super.initState();
+    tabBarController = TabController(length: 3, vsync: this);
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance!.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        ref.read(authControllerProvider).setUserState(true);
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.detached:
+      case AppLifecycleState.paused:
+        ref.read(authControllerProvider).setUserState(false);
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +78,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: const Text(
                     'Create Group',
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    // Future(
+                    //   () => Navigator.pushNamed(
+                    //       context, CreateGroupScreen.routeName),
+                    // );
+                  },
                 )
               ],
             ),
@@ -74,13 +113,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         body: TabBarView(
           controller: tabBarController,
           children: const [
-            Text('ContactList'),
-            Text('StatusScreen'),
-            Text('Calls')
+            ContactsList(),
+            // StatusContactsScreen(),
+            Text('Calls'),
+            Text('Calls'),
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () async {},
+          onPressed: () async {
+            if (tabBarController.index == 0) {
+              Navigator.pushNamed(context, SelectContactsScreen.routeName);
+            } else {
+              File? pickedImage = await pickImageFromGallery(context);
+              if (pickedImage != null) {
+                // Navigator.pushNamed(
+                //   context,
+                //   ConfirmStatusScreen.routeName,
+                //   arguments: pickedImage,
+                // );
+              }
+            }
+          },
           backgroundColor: tabColor,
           child: const Icon(
             Icons.comment,

@@ -3,6 +3,8 @@ import 'package:whatsapp_clone_/common/widgets/error.dart';
 import 'package:whatsapp_clone_/features/auth/views/login_screen.dart';
 import 'package:whatsapp_clone_/features/auth/views/otp_screen.dart';
 import 'package:whatsapp_clone_/features/auth/views/user_profile_setup.dart';
+import 'package:whatsapp_clone_/features/chats/views/chat_screen.dart';
+import 'package:whatsapp_clone_/features/select_contact/views/select_contact_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -21,24 +23,24 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => const UserInformationScreen(),
       );
-    // case SelectContactsScreen.routeName:
-    //   return MaterialPageRoute(
-    //     builder: (context) => const SelectContactsScreen(),
-    //   );
-    // case MobileChatScreen.routeName:
-    //   final arguments = settings.arguments as Map<String, dynamic>;
-    //   final name = arguments['name'];
-    //   final uid = arguments['uid'];
-    //   final isGroupChat = arguments['isGroupChat'];
-    //   final profilePic = arguments['profilePic'];
-    //   return MaterialPageRoute(
-    //     builder: (context) => MobileChatScreen(
-    //       name: name,
-    //       uid: uid,
-    //       isGroupChat: isGroupChat,
-    //       profilePic: profilePic,
-    //     ),
-    //   );
+    case SelectContactsScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const SelectContactsScreen(),
+      );
+    case ChatScreen.routeName:
+      final arguments = settings.arguments as Map<String, dynamic>;
+      final name = arguments['name'];
+      final uid = arguments['uid'];
+      final isGroupChat = arguments['isGroupChat'];
+      final profilePic = arguments['profilePic'];
+      return MaterialPageRoute(
+        builder: (context) => ChatScreen(
+          name: name,
+          uid: uid,
+          isGroupChat: isGroupChat,
+          profilePic: profilePic,
+        ),
+      );
     // case ConfirmStatusScreen.routeName:
     //   final file = settings.arguments as File;
     //   return MaterialPageRoute(
