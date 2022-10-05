@@ -8,7 +8,6 @@ import 'package:whatsapp_clone_/features/chats/widgets/recent_chat.dart';
 import 'package:whatsapp_clone_/features/select_contact/views/select_contact_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -22,13 +21,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   void initState() {
     super.initState();
     tabBarController = TabController(length: 3, vsync: this);
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     super.dispose();
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
@@ -113,9 +112,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         body: TabBarView(
           controller: tabBarController,
           children: const [
-            ContactsList(),
-            // StatusContactsScreen(),
-            Text('Calls'),
+            RecentChatList(),
+            Text('Status'),
             Text('Calls'),
           ],
         ),
@@ -126,11 +124,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             } else {
               File? pickedImage = await pickImageFromGallery(context);
               if (pickedImage != null) {
-                // Navigator.pushNamed(
-                //   context,
-                //   ConfirmStatusScreen.routeName,
-                //   arguments: pickedImage,
-                // );
+              
               }
             }
           },

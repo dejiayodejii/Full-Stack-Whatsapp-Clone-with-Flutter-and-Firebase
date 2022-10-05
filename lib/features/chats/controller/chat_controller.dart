@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whatsapp_clone_/common/enums/enums.dart';
 import 'package:whatsapp_clone_/features/auth/controller/auth_provider.dart';
 import 'package:whatsapp_clone_/features/chats/repository/chat_repository.dart';
 import 'package:whatsapp_clone_/models/message_model.dart';
@@ -38,6 +41,43 @@ class ChatController {
           (value) => chatRepository.sendMessage(
             context: context,
             text: text,
+            recieverUserId: recieverUserId,
+            senderUser: value!,
+          ),
+        );
+  }
+
+  void sendFileMessage(
+    BuildContext context,
+    File file,
+    String recieverUserId,
+    MessageEnum messageEnum,
+  ) {
+    ref.read(userDataAuthProvider).whenData(
+          (value) => chatRepository.sendFileMessage(
+            context: context,
+            file: file,
+            recieverUserId: recieverUserId,
+            senderUserData: value!,
+            messageEnum: messageEnum,
+            ref: ref,
+          ),
+        );
+  }
+
+  void sendGIFMessage(
+    BuildContext context,
+    String gifUrl,
+    String recieverUserId,
+  ) {
+    int gifUrlPartIndex = gifUrl.lastIndexOf('-') + 1;
+    String gifUrlPart = gifUrl.substring(gifUrlPartIndex);
+    String newgifUrl = 'https://i.giphy.com/media/$gifUrlPart/200.gif';
+
+    ref.read(userDataAuthProvider).whenData(
+          (value) => chatRepository.sendGIFMessage(
+            context: context,
+            gifUrl: newgifUrl,
             recieverUserId: recieverUserId,
             senderUser: value!,
           ),

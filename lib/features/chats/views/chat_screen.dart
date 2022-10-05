@@ -5,7 +5,7 @@ import 'package:whatsapp_clone_/common/utils/colors.dart';
 import 'package:whatsapp_clone_/common/widgets/loader.dart';
 import 'package:whatsapp_clone_/features/auth/controller/auth_provider.dart';
 import 'package:whatsapp_clone_/features/chats/widgets/chat_input_txtfield.dart';
-import 'package:whatsapp_clone_/features/chats/widgets/chat_list.dart';
+import 'package:whatsapp_clone_/features/chats/widgets/chat_messages.dart';
 import 'package:whatsapp_clone_/models/user_model.dart';
 
 class ChatScreen extends ConsumerWidget {

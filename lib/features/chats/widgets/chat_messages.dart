@@ -39,7 +39,7 @@ class _ChatListState extends ConsumerState<ChatList> {
             return const Loader();
           }
 
-          SchedulerBinding.instance!.addPostFrameCallback((_) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
             messageController
                 .jumpTo(messageController.position.maxScrollExtent);
           });
@@ -53,11 +53,13 @@ class _ChatListState extends ConsumerState<ChatList> {
               if (messageData.senderId ==
                   FirebaseAuth.instance.currentUser!.uid) {
                 return MyMessageCard(
+                  type: messageData.type,
                   message: messageData.text,
                   date: timeSent,
                 );
               }
               return SenderMessageCard(
+                type: messageData.type,
                 message: messageData.text,
                 date: timeSent,
               );

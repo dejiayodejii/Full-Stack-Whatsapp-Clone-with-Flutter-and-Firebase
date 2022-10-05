@@ -28,6 +28,7 @@ class AuthController {
   }
 
   void signInWithPhone(BuildContext context, String phoneNumber) {
+    print('i got called');
     authRepository.signInWithPhone(context, phoneNumber);
   }
 

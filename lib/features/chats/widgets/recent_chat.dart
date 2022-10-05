@@ -7,8 +7,8 @@ import 'package:whatsapp_clone_/features/chats/controller/chat_controller.dart';
 import 'package:whatsapp_clone_/features/chats/views/chat_screen.dart';
 import 'package:whatsapp_clone_/models/recent_chat.dart';
 
-class ContactsList extends ConsumerWidget {
-  const ContactsList({Key? key}) : super(key: key);
+class RecentChatList extends ConsumerWidget {
+  const RecentChatList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

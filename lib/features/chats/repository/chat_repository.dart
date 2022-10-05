@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:whatsapp_clone_/common/enums/enums.dart';
+import 'package:whatsapp_clone_/common/repository/firebase_repository.dart';
 import 'package:whatsapp_clone_/common/utils/utils.dart';
 import 'package:whatsapp_clone_/models/message_model.dart';
 import 'package:whatsapp_clone_/models/recent_chat.dart';
@@ -192,4 +195,110 @@ class ChatRepository {
           message.toMap(),
         );
   }
+
+
+   void sendFileMessage({
+    required BuildContext context,
+    required File file,
+    required String recieverUserId,
+    required UserModel senderUserData,
+    required ProviderRef ref,
+    required MessageEnum messageEnum,
+  }) async {
+    try {
+      var timeSent = DateTime.now();
+      var messageId = const Uuid().v1();
+
+      String imageUrl = await ref
+          .read(commonFirebaseStorageRepositoryProvider)
+          .storeFileToFirebase(
+            'chat/${messageEnum.type}/${senderUserData.uid}/$recieverUserId/$messageId',
+            file,
+          );
+
+      UserModel? recieverUserData;
+
+      String contactMsg;
+
+      switch (messageEnum) {
+        case MessageEnum.image:
+          contactMsg = '📷 Photo';
+          break;
+        case MessageEnum.video:
+          contactMsg = '📸 Video';
+          break;
+        case MessageEnum.audio:
+          contactMsg = '🎵 Audio';
+          break;
+        case MessageEnum.gif:
+          contactMsg = 'GIF';
+          break;
+        default:
+          contactMsg = 'GIF';
+      }
+      _saveToRecentChat(
+        senderUserData,
+        recieverUserData,
+        contactMsg,
+        timeSent,
+        recieverUserId,
+  
+      );
+
+      _saveMessageToCollection(
+        recieverUserId: recieverUserId,
+        text: imageUrl,
+        timeSent: timeSent,
+        messageId: messageId,
+        username: senderUserData.name,
+        messageType: messageEnum,
+       
+        recieverUserName: recieverUserData?.name,
+        senderUsername: senderUserData.name,
+      );
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  void sendGIFMessage({
+    required BuildContext context,
+    required String gifUrl,
+    required String recieverUserId,
+    required UserModel senderUser,
+  }) async {
+    try {
+      var timeSent = DateTime.now();
+      UserModel? recieverUserData;
+
+      var messageId = const Uuid().v1();
+
+      _saveToRecentChat(
+        senderUser,
+        recieverUserData,
+        'GIF',
+        timeSent,
+        recieverUserId,
+        
+      );
+
+      _saveMessageToCollection(
+        recieverUserId: recieverUserId,
+        text: gifUrl,
+        timeSent: timeSent,
+        messageType: MessageEnum.gif,
+        messageId: messageId,
+        username: senderUser.name,
+       
+        recieverUserName: recieverUserData?.name,
+        senderUsername: senderUser.name,
+        
+      );
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+
+
 }
