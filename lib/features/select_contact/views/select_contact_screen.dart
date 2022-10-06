@@ -4,10 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsapp_clone_/common/widgets/error.dart';
 import 'package:whatsapp_clone_/common/widgets/loader.dart';
 import 'package:whatsapp_clone_/features/select_contact/controller/contact_controller.dart';
+import 'package:whatsapp_clone_/features/select_contact/views/search_contact_screen.dart';
 
 class SelectContactsScreen extends ConsumerWidget {
   static const String routeName = '/select-contact';
-  const SelectContactsScreen({Key? key}) : super(key: key);
+  SelectContactsScreen({Key? key}) : super(key: key);
 
   void selectContact(
       WidgetRef ref, Contact selectedContact, BuildContext context) {
@@ -16,6 +17,8 @@ class SelectContactsScreen extends ConsumerWidget {
         .selectContact(selectedContact, context);
   }
 
+  List<Contact> contacts = [];
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -23,7 +26,12 @@ class SelectContactsScreen extends ConsumerWidget {
         title: const Text('Select contact'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              showSearch(
+                  context: context,
+                  // delegate to customize the search bar
+                  delegate: CustomSearchDelegate(contacts, ref, context));
+            },
             icon: const Icon(
               Icons.search,
             ),
@@ -41,6 +49,7 @@ class SelectContactsScreen extends ConsumerWidget {
                 itemCount: contactList.length,
                 itemBuilder: (context, index) {
                   final contact = contactList[index];
+                  contacts = contactList;
                   return InkWell(
                     onTap: () => selectContact(ref, contact, context),
                     child: Padding(
@@ -54,11 +63,11 @@ class SelectContactsScreen extends ConsumerWidget {
                         ),
                         leading: contact.photo == null
                             ? const CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png',
-                          ),
-                          radius: 20,
-                        )
+                                backgroundImage: NetworkImage(
+                                  'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png',
+                                ),
+                                radius: 20,
+                              )
                             : CircleAvatar(
                                 backgroundImage: MemoryImage(contact.photo!),
                                 radius: 30,
